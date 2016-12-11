@@ -383,6 +383,9 @@ if (!residualMap) {
     
   }
   
+  dimMat <- dim(imageMat)
+  rm(imageMat)
+  
   residualsList <- mclapply(model, function(x) {
     return(x[[2]])
   }, mc.cores = ncores)
@@ -391,7 +394,8 @@ if (!residualMap) {
     return(x[[1]])
   }, mc.cores = ncores)
   
-  residualMat <- matrix(unlist(residualsList), nrow = dim(imageMat)[1], ncol = dim(imageMat)[2])
+  residualMat <- matrix(unlist(residualsList), nrow = dimMat[1], ncol = dimMat[2])
+  rm(residualsList)
   
   loopTime<-proc.time()-timeOn
   
