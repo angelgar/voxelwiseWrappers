@@ -44,7 +44,7 @@ option_list = list(
               Default (FALSE) means to not skip"),
   make_option(c("-r", "--residual"), action="store", default=FALSE, type='logical',
               help="Option to output residual 4D image.
-              Default (FALSE) means to not skip")
+              Default (FALSE) means to not generate residual maps")
   )
 
 opt = parse_args(OptionParser(option_list=option_list))
@@ -402,6 +402,18 @@ if (!residualMap) {
   
   print("Models are done")
   print(loopTime/60)
+  
+  ### Create output
+  residualMap <- mask
+  residualMap <- residualMap@.Data
+  
+  residuals <- mcmapply(function(x) {
+    residualMap[mask == 1] <- residualMat[,x] 
+    return(residualMap)
+  }, 1:dimMat[1], SIMPLIFY = "array", mc.cores = ncores)
+  
+  residualNii <- nifti(residuals, dim = dim(residuals), datatype = datatype(imageIn))
+  writeNIfTI(residualNii,"~/gam_residualMap")
 }
 
 ##AGG NOTES: You need to create fourdimage ... maybe it's best to output individual images and then merge? 
