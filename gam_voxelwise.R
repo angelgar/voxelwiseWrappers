@@ -416,8 +416,6 @@ if (!residualMap) {
   writeNIfTI(residualNii,"~/gam_residualMap")
 }
 
-##AGG NOTES: You need to create fourdimage ... maybe it's best to output individual images and then merge? 
-
 
 ##############################################################################
 ################        Allocate out t-map and z-map            ###############
