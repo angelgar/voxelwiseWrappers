@@ -299,8 +299,6 @@ print("Preallocate output done")
 ##############################################################################
 timeOn<-proc.time()
 
-k <- 0
-rm(k)
 length.voxel <- ceiling(dim(imageMat)[2] / splits)
 
 # We create a list of formulas for each voxel in our data. 
@@ -347,6 +345,7 @@ if (!residualMap) {
 } else {
   
   #Case to output Residual
+  print("Working on test models; will generate residual timeseries")
   
   #Running Test model
   m <- mclapply(1:10, function(x) {as.formula(paste(paste0("imageMat[,",x,"]"), covsFormula, sep=""))}, mc.cores = ncores)
@@ -381,39 +380,60 @@ if (!residualMap) {
     
     model <- c(model, model.temp)
     
+    percent <- (k / splits) * 100
+    print(paste0(percent, "% of voxels done"))
   }
   
+  
+  ##Remove tsmatrix
   dimMat <- dim(imageMat)
   rm(imageMat)
+  gc()
   
-  residualsList <- mclapply(model, function(x) {
+  #Generate tsresiduals
+  residualsMat <- mcmapply(function(x) {
     return(x[[2]])
-  }, mc.cores = ncores)
+  }, model, mc.cores = ncores, SIMPLIFY = TRUE, mc.preschedule=F)
   
+  
+  #Save only parameter tables under models
   model <- mclapply(model, function(x) {
     return(x[[1]])
   }, mc.cores = ncores)
   
-  residualMat <- matrix(unlist(residualsList), nrow = dimMat[1], ncol = dimMat[2])
-  rm(residualsList)
-  
   loopTime<-proc.time()-timeOn
-  
   
   print("Models are done")
   print(loopTime/60)
   
+  print("Generating Residual timeseries")
   ### Create output
   residualMap <- mask
   residualMap <- residualMap@.Data
   
+  #remove image in for memorize optimization purposes
+  dataTypeIn <- datatype(imageIn)
+  rm(imageIn)
+  gc()
+  
+  #generate 4d residual image
   residuals <- mcmapply(function(x) {
     residualMap[mask == 1] <- residualMat[,x] 
     return(residualMap)
-  }, 1:dimMat[1], SIMPLIFY = "array", mc.cores = ncores)
+  }, 1:1029, SIMPLIFY = "array", mc.cores = ncores, mc.preschedule=F)
   
-  residualNii <- nifti(residuals, dim = dim(residuals), datatype = datatype(imageIn))
-  writeNIfTI(residualNii,"~/gam_residualMap")
+  rm(residualMat)
+  gc()
+  
+  #Write it out 
+  residualNii <- nifti(residuals, dim = dim(residuals), datatype = dataTypeIn)
+  
+  rm(residuals)
+  gc()
+  
+  writeNIfTI2(residualNii,"gam_residualMap")
+  
+  print("DONE: Residual timeseries")
 }
 
 
