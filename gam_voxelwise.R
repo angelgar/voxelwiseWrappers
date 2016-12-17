@@ -84,6 +84,7 @@ suppressMessages(require(oro.nifti))
 suppressMessages(require(parallel))
 suppressMessages(require(optparse))
 suppressMessages(require(fslr))
+suppressMessages(require(voxel))
 
 
 
