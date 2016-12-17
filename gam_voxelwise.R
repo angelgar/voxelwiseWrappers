@@ -391,10 +391,17 @@ if (!residualMap) {
   gc()
   
   #Generate tsresiduals
-  residualsMat <- mcmapply(function(x) {
+  residualList <- mclapply(model, function(x) {
     return(x[[2]])
-  }, model, mc.cores = ncores, SIMPLIFY = TRUE, mc.preschedule=F)
+  }, mc.cores = ncores)
   
+  #Generate tsresiduals
+  residualMat <- mcmapply(function(x) {
+    return(x)
+  }, residualList, mc.cores = ncores, SIMPLIFY = TRUE)
+  
+  rm(residualList)
+  gc()
   
   #Save only parameter tables under models
   model <- mclapply(model, function(x) {
@@ -407,31 +414,46 @@ if (!residualMap) {
   print(loopTime/60)
   
   print("Generating Residual timeseries")
+  
   ### Create output
-  residualMap <- mask
-  residualMap <- residualMap@.Data
+  residualMask <- mask
+  residualMask <- residualMask@.Data
   
   #remove image in for memorize optimization purposes
   dataTypeIn <- datatype(imageIn)
   rm(imageIn)
   gc()
   
-  #generate 4d residual image
-  residuals <- mcmapply(function(x) {
-    residualMap[mask == 1] <- residualMat[,x] 
-    return(residualMap)
-  }, 1:1029, SIMPLIFY = "array", mc.cores = ncores, mc.preschedule=F)
+  Residualnames <- "temp"
+  subj.split <- ceiling(dim(residualMat)[1] / splits)
   
-  rm(residualMat)
-  gc()
+  for (k in 1:(splits)) {
+
+    if (k == splits) {
+      seq <- (1 + (k-1)*subj.split):(dim(residualMat)[1])
+    } else {
+      seq <- (1 + (k-1)*subj.split):(k*subj.split)
+    }
+    
+    #generate 4d residual image
+    residuals <- mcmapply(function(x) {
+      residualMask[mask@.Data==1] <- residualMat[x,] 
+      return(residualMask)
+    }, seq, SIMPLIFY = "array", mc.cores = ncores, mc.preschedule=F)
+    
+    #Write it out 
+    residualNii <- nifti(residuals, dim = dim(residuals), datatype = dataTypeIn)
+    
+    rm(residuals)
+    gc()
+    
+    writeNIfTI2(residualNii,paste0("gam_residualMap_", k))
+    Residualnames <- c(Residualnames, paste0("gam_residualMap_", k,".nii.gz"))
+  }
   
-  #Write it out 
-  residualNii <- nifti(residuals, dim = dim(residuals), datatype = dataTypeIn)
-  
-  rm(residuals)
-  gc()
-  
-  writeNIfTI2(residualNii,"gam_residualMap")
+  Residualnames <- Residualnames[-1]
+  fslmerge(Residualnames, direction="t", outfile="gam_residualMap.nii.gz")
+  system('rm -f gam_residualMap_*.nii.gz')
   
   print("DONE: Residual timeseries")
 }
