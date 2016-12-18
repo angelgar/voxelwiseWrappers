@@ -335,6 +335,9 @@ if (!residualMap) {
     }, mc.cores = ncores)
     
     model <- c(model, model.temp)
+    
+    percent <- (k / splits) * 100
+    print(paste0(percent, "% of voxels done"))
   }
   
   loopTime<-proc.time()-timeOn
@@ -432,8 +435,10 @@ if (!residualMap) {
 
     if (k == splits) {
       seq <- (1 + (k-1)*subj.split):(dim(residualMat)[1])
+      print(c(seq[1], seq[length(seq)]))
     } else {
       seq <- (1 + (k-1)*subj.split):(k*subj.split)
+      print(c(seq[1], seq[length(seq)]))
     }
     
     #generate 4d residual image
