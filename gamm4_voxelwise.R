@@ -44,7 +44,10 @@ option_list = list(
   make_option(c("-d", "--skipfourD"), action="store", default=FALSE, type='logical',
               help="Option to skip creation of fourdD image and look for it in the Analysis Directory.
               4D image must be labeled as 'fourd.nii.gz'. Will also skip smoothing step.
-              Default (FALSE) means to not skip")
+              Default (FALSE) means to not skip"),
+  make_option(c("-r", "--residual"), action="store", default=FALSE, type='logical',
+              help="Option to output residual 4D image.
+              Default (FALSE) means to not generate residual maps")
 )
 
 opt = parse_args(OptionParser(option_list=option_list))
@@ -340,6 +343,8 @@ if (!residualMap) {
     }, mc.cores = ncores)
     
     model <- c(model, model.temp)
+    percent <- (k / splits) * 100
+    print(paste0(percent, "% of voxels done"))
   }
   
   loopTime<-proc.time()-timeOn
@@ -377,6 +382,8 @@ if (!residualMap) {
     }, mc.cores = ncores)
     
     model <- c(model, model.temp)
+    percent <- (k / splits) * 100
+    print(paste0(percent, "% of voxels done"))
   }
   
   ##Remove tsmatrix
