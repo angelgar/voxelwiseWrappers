@@ -337,6 +337,8 @@ if (!residualMap) {
   }
   
   loopTime<-proc.time()-timeOn
+  print("Models are done")
+  print(loopTime/60)
   
 } else {
   
