@@ -111,6 +111,8 @@ pAdjustMethod <- opt$padjust
 splits <- opt$splits
 ncores <- opt$numbercores
 skipFourD <- opt$skipfourD
+residualMap <- opt$residual
+
 
 methods <- c("holm", "hochberg", "hommel", "bonferroni", "BH", "BY","fdr", "none")
 if (!any(pAdjustMethod == methods)) {
