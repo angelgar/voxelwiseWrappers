@@ -315,12 +315,15 @@ k <- 0
 rm(k)
 length.voxel <- ceiling(dim(imageMat)[2] / splits)
 
-# We create a list of formulas for each voxel in our data. 
-# Each element in the list will have formula with a different voxel as the dependent variable
-print("Running Test Model")
+
+setwd(outsubDir)
 
 #If statement to create or not create residual 4D image. 
 if (!residualMap) {
+  
+  # We create a list of formulas for each voxel in our data. 
+  # Each element in the list will have formula with a different voxel as the dependent variable
+  print("Running Test Model")
   
   m <- mclapply(1:10, function(x) {as.formula(paste(paste0("imageMat[,",x,"]"), covsFormula, sep=""))}, mc.cores = ncores)
   test <- gamm4(formula = m[[1]], data=subjData, REML=T, random = as.formula(randomFormula))
@@ -356,6 +359,11 @@ if (!residualMap) {
   print(loopTime/60)
   
 } else {
+  
+  # We create a list of formulas for each voxel in our data. 
+  # Each element in the list will have formula with a different voxel as the dependent variable
+  print("Working on test models; will generate residual timeseries")
+  
   
   m <- mclapply(1:10, function(x) {as.formula(paste(paste0("imageMat[,",x,"]"), covsFormula, sep=""))}, mc.cores = ncores)
   test <- gamm4(formula = m[[1]], data=subjData, REML=T, random = as.formula(randomFormula))
@@ -467,7 +475,7 @@ if (!residualMap) {
 ################        Allocate out t-map and z-map            ###############
 ##############################################################################
 
-setwd(outsubDir)
+
 
 for (j in 1:dim(model[[1]])[1]) {
   

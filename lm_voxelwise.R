@@ -300,9 +300,7 @@ timeOn<-proc.time()
 
 length.voxel <- ceiling(dim(imageMat)[2] / splits)
 
-# We create a list of formulas for each voxel in our data. 
-# Each element in the list will have formula with a different voxel as the dependent variable
-print("Running Test Model")
+setwd(outsubDir)
 
 if (!residualMap) {
   
@@ -344,7 +342,8 @@ if (!residualMap) {
   
   # We create a list of formulas for each voxel in our data. 
   # Each element in the list will have formula with a different voxel as the dependent variable
-  print("Running Test Model")
+  print("Working on test models; will generate residual timeseries")
+  
   m <- mclapply(1:10, function(x) {as.formula(paste(paste0("imageMat[,",x,"]"), covsFormula, sep=""))}, mc.cores = ncores)
   test <- lm(formula = m[[1]], data=subjData)
   
@@ -461,7 +460,7 @@ print(loopTime/60)
 ################        Allocate out t-map and z-map            ###############
 ##############################################################################
 
-setwd(outsubDir)
+
 
 for (j in 1:dim(model[[1]])[1]) {
   

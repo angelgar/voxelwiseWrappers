@@ -302,12 +302,14 @@ timeOn<-proc.time()
 
 length.voxel <- ceiling(dim(imageMat)[2] / splits)
 
-# We create a list of formulas for each voxel in our data. 
-# Each element in the list will have formula with a different voxel as the dependent variable
-print("Running Test Model")
+setwd(outsubDir)
 
 #If statement to create or not create residual 4D image. 
 if (!residualMap) {
+  
+  # We create a list of formulas for each voxel in our data. 
+  # Each element in the list will have formula with a different voxel as the dependent variable
+  print("Running Test Model")
   
   #Case without residual 
   #Running Test Model
@@ -469,7 +471,7 @@ if (!residualMap) {
 ################        Allocate out t-map and z-map            ###############
 ##############################################################################
 
-setwd(outsubDir)
+
 
 for (j in 1:dim(model[[1]])[1]) {
   
