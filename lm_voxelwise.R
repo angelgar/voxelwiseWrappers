@@ -430,7 +430,9 @@ if (!residualMap) {
     }, seq, SIMPLIFY = "array", mc.cores = ncores, mc.preschedule=F)
     
     #Write it out 
-    residualNii <- nifti(residuals, dim = dim(residuals), datatype = dataTypeIn)
+    residualNii <- imageIn
+    residualNii@.Data <- residuals
+    residualNii <- drop_img_dim(residualNii)
     
     rm(residuals)
     gc()
