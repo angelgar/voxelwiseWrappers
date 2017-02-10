@@ -463,6 +463,7 @@ if (!residualMap) {
   }
   
   Residualnames <- Residualnames[-1]
+  ls()
   fslmerge(Residualnames, direction="t", outfile="gam_residualMap.nii.gz")
   system('rm -f gam_residualMap_*.nii.gz')
   
