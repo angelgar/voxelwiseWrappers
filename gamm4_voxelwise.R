@@ -453,7 +453,7 @@ if (!residualMap) {
     }, seq, SIMPLIFY = "array", mc.cores = ncores, mc.preschedule=F)
     
     #Write it out 
-    residualNii <- imageIn
+    residualNii <- mask
     residualNii@.Data <- residuals
     residualNii <- drop_img_dim(residualNii)
     
@@ -467,7 +467,10 @@ if (!residualMap) {
   Residualnames <- Residualnames[-1]
   ls()
   fslmerge(Residualnames, direction="t", outfile="gamm4_residualMap.nii.gz")
-  system('rm -f gamm4_residualMap_*.nii.gz')
+  
+  for (i in Residualnames) {
+    system(paste0("rm -f ",i))
+  }
   
   print("DONE: Residual timeseries")
   
