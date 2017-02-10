@@ -187,8 +187,8 @@ print("mask succesfully copied")
 ################            Output summary files               ###############
 ##############################################################################
 
-write.csv(subjData[, namePaths], paste0(namePaths,".csv"), row.names = F)
-write.csv(subjData[, subjID], paste0(subjID,".csv"), row.names = F)
+write.table(subjData[, namePaths], paste0(namePaths,".csv"), row.names = F, col.names=FALSE)
+write.table(subjData[, subjID], paste0(subjID,".csv"), row.names = F, col.names=FALSE)
 
 print("Succesfully wrote paths and id files")
 
