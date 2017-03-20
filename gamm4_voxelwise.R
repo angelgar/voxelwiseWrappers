@@ -31,8 +31,8 @@ option_list = list(
               help="subjID name on the covariates dataset"), 
   make_option(c("-f", "--formula"), action="store", default=NA, type='character',
               help="Formula for covariates to be used, should only include the right hand side of the formula.
-              Example: ~ stai_stai_tr+sex+s(age)+s(age,by=sex)"), 
-  make_option(c("-r", "--random"), action="store", default=NULL, type='character',
+              Example: ~ stai_stai_tr+sex+s(age)+s(age,by=sex)"),
+  make_option(c("-e", "--random"), action="store", default=NULL, type='character',
               help="Formula for random effects to be used, should only include the right hand side of the formula.
               Example: ~(1|bblid)"),
   make_option(c("-a", "--padjust"), action="store", default="none", type='character',
@@ -48,7 +48,9 @@ option_list = list(
   make_option(c("-r", "--residual"), action="store", default=FALSE, type='logical',
               help="Option to output residual 4D image.
               Default (FALSE) means to not generate residual maps")
-)
+  )
+
+
 
 opt = parse_args(OptionParser(option_list=option_list))
 
