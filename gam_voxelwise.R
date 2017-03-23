@@ -504,6 +504,8 @@ for (j in 1:dim(model[[1]])[1]) {
     var <- gsub("\\)", "", var)
     var <- gsub(",", "", var)
     var <- gsub("=", "", var)
+    var <- gsub("\\*","and",var)
+    var <- gsub(":","and",var)
     
     
     writeNIfTI(pOutImage,paste0("gamP_",var))
