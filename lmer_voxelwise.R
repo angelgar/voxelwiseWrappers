@@ -319,13 +319,13 @@ if (!residualMap) {
   print("Running Test Model")
   
   m <- mclapply(1:10, function(x) {as.formula(paste(paste0("imageMat[,",x,"]"), covsFormula, sep=""))}, mc.cores = ncores)
-  test <- base::do.call(lmerTest::lmer, list(formula = m[[1]], data=subjData,  method="REML"))
+  test <- base::do.call(lmerTest::lmer, list(formula = m[[1]], data=subjData,  REML=T))
   test <- lmerTest::lmer(formula = m[[1]], data=subjData, REML = TRUE)
   
   
   
   model <- mclapply(m, function(x) {
-    foo <- base::do.call(lmerTest::lmer, list(formula = x, data=subjData,  method="REML"))
+    foo <- base::do.call(lmerTest::lmer, list(formula = x, data=subjData,  REML=T))
     return(summary(foo)$coefficients)
   }, mc.cores = ncores)
   
@@ -338,7 +338,7 @@ if (!residualMap) {
       m <- mclapply((11 + (k-1)*length.voxel):(10 + (k)*length.voxel), function(x) {as.formula(paste(paste0("imageMat[,",x,"]"), covsFormula, sep=""))}, mc.cores = ncores)  
     }
     model.temp <- mclapply(m, function(x) {
-      foo <- base::do.call(lmerTest::lmer, list(formula = x, data=subjData,  method="REML"))
+      foo <- base::do.call(lmerTest::lmer, list(formula = x, data=subjData,  REML=T))
       return(summary(foo)$coefficients)
     }, mc.cores = ncores)
     
@@ -360,13 +360,13 @@ if (!residualMap) {
   print("Working on test models; will generate residual timeseries")
   
   m <- mclapply(1:10, function(x) {as.formula(paste(paste0("imageMat[,",x,"]"), covsFormula, sep=""))}, mc.cores = ncores)
-  test <- base::do.call(lmerTest::lmer, list(formula = m[[1]], data=subjData,  method="REML"))
+  test <- base::do.call(lmerTest::lmer, list(formula = m[[1]], data=subjData,  REML=T))
   test <- lmerTest::lmer(formula = m[[1]], data=subjData, REML = TRUE)
   
   
   
   model <- mclapply(m, function(x) {
-    foo <- base::do.call(lmerTest::lmer, list(formula = x, data=subjData,  method="REML"))
+    foo <- base::do.call(lmerTest::lmer, list(formula = x, data=subjData,  REML=T))
     return(list(summary(foo)$coefficients, summary(foo)$residuals))
   }, mc.cores = ncores)
   
@@ -379,7 +379,7 @@ if (!residualMap) {
       m <- mclapply((11 + (k-1)*length.voxel):(10 + (k)*length.voxel), function(x) {as.formula(paste(paste0("imageMat[,",x,"]"), covsFormula, sep=""))}, mc.cores = ncores)  
     }
     model.temp <- mclapply(m, function(x) {
-      foo <- base::do.call(lmerTest::lmer, list(formula = x, data=subjData,  method="REML"))
+      foo <- base::do.call(lmerTest::lmer, list(formula = x, data=subjData,  REML=T))
       return(list(summary(foo)$coefficients, summary(foo)$residuals))
     }, mc.cores = ncores)
     
@@ -433,14 +433,6 @@ if (!residualMap) {
   
   for (k in 1:(splits)) {
     
-    if (k == splits) {
-      seq <- (1 + (k-1)*subj.split):(dim(residualMat)[1])
-      print(c(seq[1], seq[length(seq)]))
-    } else {
-      seq <- (1 + (k-1)*subj.split):(k*subj.split)
-      print(c(seq[1], seq[length(seq)]))
-    }
-    
     #generate 4d residual image
     residuals <- mcmapply(function(x) {
       residualMask[mask@.Data==1] <- residualMat[x,] 
@@ -457,6 +449,16 @@ if (!residualMap) {
     
     writeNIfTI2(residualNii,paste0("lmer_residualMap_", k))
     Residualnames <- c(Residualnames, paste0("lmer_residualMap_", k,".nii.gz"))
+    
+    ##Output Percentages
+    if (k == splits) {
+      seq <- (1 + (k-1)*subj.split):(dim(residualMat)[1])
+      print(paste0(seq[length(seq)]*100/dim(residualMat)[1],"%"))
+    } else {
+      seq <- (1 + (k-1)*subj.split):(k*subj.split)
+      print(paste0(seq[length(seq)]*100/dim(residualMat)[1],"%"))
+    }
+    
   }
   
   Residualnames <- Residualnames[-1]

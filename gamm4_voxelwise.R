@@ -442,12 +442,6 @@ if (!residualMap) {
   
   for (k in 1:(splits)) {
     
-    if (k == splits) {
-      seq <- (1 + (k-1)*subj.split):(dim(residualMat)[1])
-    } else {
-      seq <- (1 + (k-1)*subj.split):(k*subj.split)
-    }
-    
     #generate 4d residual image
     residuals <- mcmapply(function(x) {
       residualMask[mask@.Data==1] <- residualMat[x,] 
@@ -464,6 +458,17 @@ if (!residualMap) {
     
     writeNIfTI2(residualNii,paste0("gamm4_residualMap_", k))
     Residualnames <- c(Residualnames, paste0("gamm4_residualMap_", k,".nii.gz"))
+    
+    
+    ##Output Percentages
+    if (k == splits) {
+      seq <- (1 + (k-1)*subj.split):(dim(residualMat)[1])
+      print(paste0(seq[length(seq)]*100/dim(residualMat)[1],"%"))
+    } else {
+      seq <- (1 + (k-1)*subj.split):(k*subj.split)
+      print(paste0(seq[length(seq)]*100/dim(residualMat)[1],"%"))
+    }
+    
   }
   
   Residualnames <- Residualnames[-1]
