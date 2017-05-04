@@ -43,7 +43,7 @@ option_list = list(
               help="P-value threshold for cluster correction"),
   make_option(c("-n", "--nsim"), action="store", default=500, type='numeric',
               help="Number of simulations, default is 500"),
-  make_option(c("-r", "--run"), action="store", default=FALSE, type='logical',
+  make_option(c("-e", "--execute"), action="store", default=FALSE, type='logical',
               help="Whether to run the command default is to only print out command ")
   )
 
