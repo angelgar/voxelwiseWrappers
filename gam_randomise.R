@@ -111,7 +111,7 @@ smooth <- opt$smoothing
 skipFourD <- opt$skipfourD
 thresh <- opt$thresh
 nsim <- opt$nsim
-runCommand <- opt$run
+runCommand <- opt$execute
 
 
 ##############################################################################
@@ -311,9 +311,12 @@ fcmd = paste('randomise -i', mergednifti, '-m', maskfile, '-o', file.path(outsub
 
 print("Succesfully created call")  
 
+print(runCommand)
+print(splits)
+print(nsim)
 
 ##Change run
-if(runCommand){
+if (runCommand) {
   system(fcmd)
   print("Succesfully ran randomise")  
   
