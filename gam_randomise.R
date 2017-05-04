@@ -107,6 +107,7 @@ subjID <- opt$subjId
 fullFormula <- opt$ffull
 redFormula <- opt$freduced
 splits <- opt$splits
+smooth <- opt$smoothing
 skipFourD <- opt$skipfourD
 thresh <- opt$thresh
 nsim <- opt$nsim
