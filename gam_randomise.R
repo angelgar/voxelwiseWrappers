@@ -251,6 +251,7 @@ system( paste0("echo Run command is: ", outName,">> ", runCommand,"/logs.txt"))
 ###cleanup logdir
 system(paste('rm -f', file.path(logDir, '*')))
 
+print("Succesfully created log files")
 
 
 ##############################################################################
@@ -262,6 +263,7 @@ subjData$dummy <- rnorm(dim(subjData)[1])
 X = model.matrix(gam(update.formula(fullFormula, "dummy ~ .") , data=subjData))
 Xred = model.matrix(gam(update.formula(redFormula, "dummy ~ .") , data=subjData))
 
+print("Succesfully generated design matrices")
 
 ##############################################################################
 ################          Output Design and Contrasts          ###############
@@ -277,19 +279,24 @@ matfile = file.path(outsubDir, 'design.mat')
 cat('/NumWaves\t', ncol(X), '\n/NumPoints\t', nrow(X), '\n/PPheights\t', paste(apply(X, 2, function(x) abs(diff(range(x))) ), collapse='\t'), '\n\n/Matrix\n', sep='', file=matfile)
 write.table(X, append=TRUE, file=matfile, row.names=FALSE, col.names=FALSE)
   
+print("Succesfully created randomise design file")
+
 # contrast file
 confile1 = file.path(outsubDir, 'design.con') # for f-test
 cons = matrix(0, nrow=p2, ncol=ncol(X))
 cons[ cbind(1:(p2), which(! colnames(X) %in% colnames(Xred) ) ) ] = 1
 cat('/ContrastName1\t temp\n/ContrastName2\t\n/NumWaves\t', ncol(X), '\n/NumPoints\t', nrow(cons), '\n/PPheights\t', paste(rep(1,ncol(cons)), collapse='\t'), '\n/RequiredEffect\t1\t1\n\n/Matrix\n', sep='', file=confile1)
 write.table(cons, append=TRUE, file=confile1, row.names=FALSE, col.names=FALSE)
+
+print("Succesfully created randomise contrast file")
   
 # fts file
 ftsfile = file.path(outsubDir, 'design.fts')
 fts = matrix(1, nrow=1, ncol=nrow(cons)) # ftest of all contrasts
 cat('/NumWaves\t', nrow(cons), '\n/NumContrasts\t', 1, '\n\n/Matrix\n', sep='', file=ftsfile)
 write.table(fts, append=TRUE, file=ftsfile, row.names=FALSE, col.names=FALSE)
-  
+
+print("Succesfully created randomise f-test file")  
 
 ##############################################################################
 ################          Generate and Run command             ###############
@@ -302,12 +309,16 @@ write.table(fts, append=TRUE, file=ftsfile, row.names=FALSE, col.names=FALSE)
 # F-test
 fcmd = paste('randomise -i', mergednifti, '-m', maskfile, '-o', file.path(outsubDir, 'randomise'), '-d', matfile, '-t', confile1, '-f', ftsfile, '--fonly -F', qf( (1-thresh),df1=p2, df2=(n-p) ), '-x -N -n', nsim, '--uncorrp' )
 
+print("Succesfully created call")  
+
 
 ##Change run
 if(run){
   system(fcmd)
+  print("Succesfully ran randomise")  
+  
 }
 
 print(fcmd)
 
-print("Write t-maps and p-maps is done")
+print("Script is done")
