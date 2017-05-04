@@ -243,7 +243,7 @@ system( paste0("echo ID variable name is: ", subjID,">> ", outsubDir,"/logs.txt"
 #system( paste0("echo Formula for full model is: ", fullFormula,">> ", outsubDir,"/logs.txt"))
 #system( paste0("echo Formula for reduced model is: ", redFormula,">> ", outsubDir,"/logs.txt"))
 system( paste0("echo Number of splits is: ", splits,">> ", outsubDir,"/logs.txt"))
-system( paste0("echo Skip 4D image creation is: ", skipFourdD,">> ", outsubDir,"/logs.txt"))
+system( paste0("echo Skip 4D image creation is: ", skipFourD,">> ", outsubDir,"/logs.txt"))
 system( paste0("echo Threshold for correction is: ", thresh,">> ", outsubDir,"/logs.txt"))
 system( paste0("echo Number of simulations is: ", nsim,">> ", outsubDir,"/logs.txt"))
 system( paste0("echo Run command is: ", outName,">> ", runCommand,"/logs.txt"))
