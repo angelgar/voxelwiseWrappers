@@ -313,7 +313,7 @@ print("Succesfully created call")
 
 
 ##Change run
-if(run){
+if(runCommand){
   system(fcmd)
   print("Succesfully ran randomise")  
   
