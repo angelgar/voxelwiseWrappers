@@ -302,8 +302,8 @@ print("Succesfully created randomise f-test file")
 ################          Generate and Run command             ###############
 ##############################################################################
 
-##change mergednifti
-##change mask file 
+mergednifti <- paste0(OutDir, "/fourd.nii.gz")
+maskfile <- paste0(OutDir, "/mask.nii.gz")
 
 # t distribution is two tailed, F is one tailed. -x outputs voxelwise statistics -N outputs null distribution text files
 # F-test
