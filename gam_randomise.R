@@ -44,7 +44,8 @@ option_list = list(
   make_option(c("-n", "--nsim"), action="store", default=500, type='numeric',
               help="Number of simulations, default is 500"),
   make_option(c("-e", "--execute"), action="store", default=FALSE, type='logical',
-              help="Whether to run the command default is to only print out command ")
+              help="Whether to run the command default is to only print out command
+              Default (FALSE) means to not execute")
   )
 
 opt = parse_args(OptionParser(option_list=option_list))
