@@ -39,6 +39,8 @@ option_list = list(
               help="Option to skip creation of fourdD image and look for it in the Analysis Directory.
               4D image must be labeled as 'fourd.nii.gz'. Will also skip smoothing step.
               Default (FALSE) means to not skip"),
+  make_option(c("-s", "--smoothing"), action="store", default=NA, type='numeric',
+              help="The smoothing in sigmas required for the fourd image. Please write in 0 if no smoothing is wanted"), 
   make_option(c("-t", "--thresh"), action="store", default=0.01, type='numeric',
               help="P-value threshold for cluster correction"),
   make_option(c("-n", "--nsim"), action="store", default=500, type='numeric',
