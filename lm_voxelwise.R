@@ -415,6 +415,14 @@ if (!residualMap) {
   
   for (k in 1:(splits)) {
     
+    ##Output Percentages
+    if (k == splits) {
+      seq <- (1 + (k-1)*subj.split):(dim(residualMat)[1])
+      print(paste0(seq[length(seq)]*100/dim(residualMat)[1],"%"))
+    } else {
+      seq <- (1 + (k-1)*subj.split):(k*subj.split)
+      print(paste0(seq[length(seq)]*100/dim(residualMat)[1],"%"))
+    }
     
     
     #generate 4d residual image
@@ -435,14 +443,7 @@ if (!residualMap) {
     Residualnames <- c(Residualnames, paste0("lm_residualMap_", k,".nii.gz"))
     
     
-    ##Output Percentages
-    if (k == splits) {
-      seq <- (1 + (k-1)*subj.split):(dim(residualMat)[1])
-      print(paste0(seq[length(seq)]*100/dim(residualMat)[1],"%"))
-    } else {
-      seq <- (1 + (k-1)*subj.split):(k*subj.split)
-      print(paste0(seq[length(seq)]*100/dim(residualMat)[1],"%"))
-    }
+
     
   }
   
