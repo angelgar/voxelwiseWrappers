@@ -458,8 +458,7 @@ if (!residualMap) {
     
     #Write it out 
     residualNii <- mask
-    residualNii@.Data <- residuals
-    residualNii <- drop_img_dim(residualNii)
+    residualNii <- nifti(residuals)
     
     rm(residuals)
     gc()
