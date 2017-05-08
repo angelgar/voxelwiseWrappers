@@ -148,6 +148,15 @@ if (!skipFourD) {
   k <- splits
   break.subj <- ceiling(length.subj / k)
   
+  if (break.subj == 1) {
+    k  = 1
+    break.subj <- ceiling(dim(imageMat)[2] / k )
+  } else if (break.subj < k ) {
+    k  = break.subj - 1 
+    break.subj <- ceiling(dim(imageMat)[2] / k )
+  }
+  
+  
   subMergeNames <- "foo"
   for (i in 1:k) {
     if (i == k) {
@@ -301,6 +310,14 @@ print("Preallocate output done")
 timeOn<-proc.time()
 
 length.voxel <- ceiling(dim(imageMat)[2] / splits)
+if (length.voxel == 1) {
+  splits = 1
+  length.voxel <- ceiling(dim(imageMat)[2] / splits)
+} else if (length.voxel < splits) {
+  splits = length.voxel - 1 
+  length.voxel <- ceiling(dim(imageMat)[2] / splits)
+}
+
 
 setwd(outsubDir)
 
@@ -313,7 +330,7 @@ if (!residualMap) {
   
   #Case without residual 
   #Running Test Model
-  m <- mclapply(1:10, function(x) {as.formula(paste(paste0("imageMat[,",x,"]"), covsFormula, sep=""))}, mc.cores = ncores)
+  m <- mclapply(1:5, function(x) {as.formula(paste(paste0("imageMat[,",x,"]"), covsFormula, sep=""))}, mc.cores = ncores)
   test <- gam(formula = m[[1]], data=subjData, method="REML")
   
   
@@ -323,14 +340,19 @@ if (!residualMap) {
   }, mc.cores = ncores)
   
   
+  
   #Running all models
   print("Test Models Done; Running Parallel Models")
   for (k in 1:(splits)) {
+    
     if (k == splits) {
-      m <- mclapply((11 + (k-1)*length.voxel):dim(imageMat)[2], function(x) {as.formula(paste(paste0("imageMat[,",x,"]"), covsFormula, sep=""))}, mc.cores = ncores)  
+      if ((6 + (k-1)*length.voxel) <  dim(imageMat)[2]) {
+      m <- mclapply((6 + (k-1)*length.voxel):dim(imageMat)[2], function(x) {as.formula(paste(paste0("imageMat[,",x,"]"), covsFormula, sep=""))}, mc.cores = ncores) 
+      }
     } else {
-      m <- mclapply((11 + (k-1)*length.voxel):(10 + (k)*length.voxel), function(x) {as.formula(paste(paste0("imageMat[,",x,"]"), covsFormula, sep=""))}, mc.cores = ncores)  
+      m <- mclapply((6 + (k-1)*length.voxel):(5 + (k)*length.voxel), function(x) {as.formula(paste(paste0("imageMat[,",x,"]"), covsFormula, sep=""))}, mc.cores = ncores)  
     }
+    
     model.temp <- mclapply(m, function(x) {
       foo <- summary(gam(formula = x, data=subjData, method="REML"))
       return(rbind(foo$p.table,foo$s.table))
@@ -354,7 +376,7 @@ if (!residualMap) {
   print("Working on test models; will generate residual timeseries")
   
   #Running Test model
-  m <- mclapply(1:10, function(x) {as.formula(paste(paste0("imageMat[,",x,"]"), covsFormula, sep=""))}, mc.cores = ncores)
+  m <- mclapply(1:5, function(x) {as.formula(paste(paste0("imageMat[,",x,"]"), covsFormula, sep=""))}, mc.cores = ncores)
   test <- gam(formula = m[[1]], data=subjData, method="REML")
   
   
@@ -372,9 +394,11 @@ if (!residualMap) {
   for (k in 1:(splits)) {
     
     if (k == splits) {
-      m <- mclapply((11 + (k-1)*length.voxel):dim(imageMat)[2], function(x) {as.formula(paste(paste0("imageMat[,",x,"]"), covsFormula, sep=""))}, mc.cores = ncores)  
+      if ((6 + (k-1)*length.voxel) <  dim(imageMat)[2]) {
+      m <- mclapply((6 + (k-1)*length.voxel):dim(imageMat)[2], function(x) {as.formula(paste(paste0("imageMat[,",x,"]"), covsFormula, sep=""))}, mc.cores = ncores)  
+      }
     } else {
-      m <- mclapply((11 + (k-1)*length.voxel):(10 + (k)*length.voxel), function(x) {as.formula(paste(paste0("imageMat[,",x,"]"), covsFormula, sep=""))}, mc.cores = ncores)  
+      m <- mclapply((6 + (k-1)*length.voxel):(5 + (k)*length.voxel), function(x) {as.formula(paste(paste0("imageMat[,",x,"]"), covsFormula, sep=""))}, mc.cores = ncores)  
     }
     
     model.temp <- mclapply(m, function(x) {

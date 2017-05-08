@@ -146,6 +146,14 @@ if (!skipFourD) {
   k <- splits
   break.subj <- ceiling(length.subj / k)
   
+  if (break.subj == 1) {
+    k  = 1
+    break.subj <- ceiling(dim(imageMat)[2] / k )
+  } else if (break.subj < k ) {
+    k  = break.subj - 1 
+    break.subj <- ceiling(dim(imageMat)[2] / k )
+  }
+  
   subMergeNames <- "foo"
   for (i in 1:k) {
     if (i == k) {
