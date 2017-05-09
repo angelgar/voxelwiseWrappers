@@ -451,6 +451,7 @@ if (!residualMap) {
   
   #remove image in for memorize optimization purposes
   dataTypeIn <- datatype(imageIn)
+  dimPixIn <- pixdim(imageIn)
   rm(imageIn)
   gc()
   
@@ -476,9 +477,8 @@ if (!residualMap) {
     }, seq, SIMPLIFY = "array", mc.cores = ncores, mc.preschedule=F)
     
     #Write it out 
-    
-    residualNii <- mask
     residualNii <- nifti(residuals)
+    pixdim(residualNii) <- dimPixIn
     
     rm(residuals)
     gc()
