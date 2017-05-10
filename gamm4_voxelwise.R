@@ -484,8 +484,7 @@ if (!residualMap) {
     }, seq, SIMPLIFY = "array", mc.cores = ncores, mc.preschedule=F)
     
     #Write it out 
-    residualNii <- nifti(residuals)
-    pixdim(residualNii) <- dimPixIn
+    residualNii <- nifti(residuals, datatype=dataTypeIn, pixdim=dimPixIn)
     
     rm(residuals)
     gc()
