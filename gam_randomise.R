@@ -140,6 +140,7 @@ setwd(OutDir)
 
 
 if (!skipFourD) {
+  
   print("Merging images and saving out a fourd image")
   subjList <- as.character(subjData[,grep(namePaths, names(subjData))])
   length.subj <- length(subjList)

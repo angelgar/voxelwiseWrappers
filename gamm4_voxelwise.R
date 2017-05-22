@@ -170,11 +170,11 @@ if (!skipFourD) {
   for (i in 1:k) {
     if (i == k) {
       out <- paste0("fourd_",i,".nii.gz")
-      fslmerge(subjList[(1 + (i-1)*break.subj):length.subj], direction="t", outfile=out)
+      fslmerge(subjList[(1 + (i-1)*break.subj):length.subj], direction="t", outfile=out, drop_dim=F)
       subMergeNames <- c(subMergeNames, out)
     } else {
       out <- paste0("fourd_",i,".nii.gz")
-      fslmerge(subjList[(1 + (i-1)*break.subj):((i)*break.subj)], direction="t", outfile=out)
+      fslmerge(subjList[(1 + (i-1)*break.subj):((i)*break.subj)], direction="t", outfile=out, drop_dim=F)
       subMergeNames <- c(subMergeNames, out)
     }
   }
