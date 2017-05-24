@@ -55,7 +55,7 @@ opt = parse_args(OptionParser(option_list=option_list))
 for (i in 1:length(opt)){
   if (is.na(opt)[i] == T) {
     cat('User did not specify all arguments.\n')
-    cat('Use gam_voxelwise.R -h for an expanded usage menu.\n')
+    cat('Use gam_randomise.R -h for an expanded usage menu.\n')
     quit()
   }
 }
