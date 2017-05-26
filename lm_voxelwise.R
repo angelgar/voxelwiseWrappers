@@ -15,8 +15,7 @@ suppressMessages(require(optparse))
 
 option_list = list(
   make_option(c("-c", "--covariates"), action="store", default=NA, type='character',
-              help="Full path to RDS covariate file.  
-              Please include bblid and scanid in this file as a column each"),
+              help="Full path to RDS covariate file."),
   make_option(c("-o", "--output"), action="store", default=NA, type='character',
               help="Full path to output directory"), 
   make_option(c("-p", "--imagepaths"), action="store", default=NA, type='character',
