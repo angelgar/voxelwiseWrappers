@@ -135,13 +135,13 @@ dataSubj <- merge(covaData, inputData, by=subjID)
 
 print("Creating Analysis Directory")
 
-inputPath <- opt$inputpaths
-inclusionName <- opt$inclusion
-
 subjDataOut <- strsplit(subjDataName, ".rds")[[1]][[1]]
-inclusionNameOut <- strsplit(inclusionName, ".csv")[[1]][[1]]
+subjDataOut <- strsplit(subjDataOut, "/")[[1]][[length(subjDataOut <- strsplit(subjDataOut, "/")[[1]])]]
 
-OutDir <- paste0(OutDirRoot, "/n",dim(dataSubj)[1],"_rds_",subjDataOut,"_inclusion_",inclusionName,"_ROI_",inclusionNameOut)
+inputPathOut <- strsplit(inputPath, ".csv")[[1]][[1]]
+inputPathOut <- strsplit(inputPathOut, "/")[[1]][[length(inputPathOut <- strsplit(inputPathOut, "/")[[1]])]]
+
+OutDir <- paste0(OutDirRoot, "/n",dim(dataSubj)[1],"_rds_",subjDataOut,"_inclusion_",inclusionName,"_ROI_",inputPathOut)
 dir.create(OutDir)
 setwd(OutDir)
 
@@ -165,7 +165,7 @@ random <- gsub("\\)", "", random)
 random <- gsub("\\|", "", random)
 
 
-outsubDir <- paste0("formula_",outName,"_random_",random)
+outsubDir <- paste0("gamm4_formula_",outName,"_random_",random)
 outsubDir<-paste(OutDir,outsubDir,sep="/")
 
 
@@ -177,7 +177,7 @@ model.formula <- mclapply((dim(covaData)[2] + 1):dim(dataSubj)[2], function(x) {
   
   as.formula(paste(paste0("dataSubj[,",x,"]"), covsFormula, sep=""))
   
-}, mc.cores=cores)
+}, mc.cores=ncores)
 
 m <- mclapply(model.formula, function(x) {
   
@@ -209,7 +209,7 @@ if (residualMap) {
   
   names(resiData)[(length(ids.index) + 1):dim(resiData)[2]] <- names(inputData)[-which(names(inputData) == subjID)]
   
-  write.csv(resiData, paste0(OutDirRoot, "residual.csv"))
+  write.csv(resiData, paste0(outsubDir, "residual.csv"))
 }
 
 
@@ -243,7 +243,7 @@ for (i in 1:length.names.p) {
   
   val.tp <- t(mcmapply(function(x) {
     x$p.table[which(rownames(x$p.table) == dep.val), 3:4]
-  }, m, mc.cores=cores))
+  }, m, mc.cores=ncores))
   
   output[,(2 + (i-1)*3):(3 + (i-1)*3)] <- val.tp
   output[,(4 + (i-1)*3)] <- p.adjust(output[,(3 + (i-1)*3)], pAdjustMethod)
@@ -277,7 +277,7 @@ if (is.null(m[[1]]$s.table)) {
     
     val.tp <- mcmapply(function(x) {
       x$s.table[which(rownames(x$s.table) == dep.val), 4]
-    }, m, mc.cores=cores)
+    }, m, mc.cores=ncores)
     
     output[,(2 + (i-1)*2)] <- val.tp
     output[,(3 + (i-1)*2)] <- p.adjust(output[,(2 + (i-1)*2)], pAdjustMethod)
@@ -286,6 +286,6 @@ if (is.null(m[[1]]$s.table)) {
   
   output$names <- names(dataSubj)[(dim(covaData)[2] + 1):dim(dataSubj)[2]]
   output <- merge(p.output, output, by="names")
-  write.csv(p.output, paste0(OutDirRoot, "coefficients.csv"))
+  write.csv(p.output, paste0(outsubDir, "_coefficients.csv"))
   
 }
