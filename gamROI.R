@@ -161,6 +161,9 @@ outsubDir<-paste(OutDir,outsubDir,sep="/")
 ################         Execute Models on ROI Dataset         ###############
 ##############################################################################
 
+
+print("Analyzing Dataset")
+
 model.formula <- mclapply((dim(covaData)[2] + 1):dim(dataSubj)[2], function(x) {
   
   as.formula(paste(paste0("dataSubj[,",x,"]"), covsFormula, sep=""))
@@ -184,6 +187,8 @@ m <- mclapply(model.formula, function(x) {
 
 
 if (residualMap) {
+  
+  print("Generating residuals")
   resiData <- dataSubj
   ids.index <- which(names(resiData) == subjID)
   resiData <- resiData[,ids.index]
@@ -206,6 +211,8 @@ if (residualMap) {
 ################           Generate parameter dataset          ###############
 ##############################################################################
 
+
+print("Generating parameters")
 ## Pull only the first object in list of models (only summary)
 m <- mclapply(m, function(x) {
   x[[1]]
@@ -277,3 +284,5 @@ if (is.null(m[[1]]$s.table)) {
   write.csv(p.output, paste0(outsubDir, "_coefficients.csv"))
   
 }
+
+print("Script Ran Succesfully")
