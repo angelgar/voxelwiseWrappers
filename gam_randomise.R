@@ -148,10 +148,10 @@ if (!skipFourD) {
   
   if (break.subj == 1) {
     k  = 1
-    break.subj <- ceiling(dim(imageMat)[2] / k )
+    break.subj <- ceiling(length.subj / k )
   } else if (break.subj < k ) {
     k  = break.subj - 1 
-    break.subj <- ceiling(dim(imageMat)[2] / k )
+    break.subj <- ceiling(length.subj / k )
   }
   
   subMergeNames <- "foo"
@@ -318,10 +318,6 @@ maskfile <- paste0(OutDir, "/mask.nii.gz")
 fcmd = paste('randomise -i', mergednifti, '-m', maskfile, '-o', file.path(outsubDir, 'randomise'), '-d', matfile, '-t', confile1, '-f', ftsfile, '--fonly -F', qf( (1-thresh),df1=p2, df2=(n-p) ), '-x -N -n', nsim, '--uncorrp' )
 
 print("Succesfully created call")  
-
-print(runCommand)
-print(splits)
-print(nsim)
 
 ##Change run
 if (runCommand) {
