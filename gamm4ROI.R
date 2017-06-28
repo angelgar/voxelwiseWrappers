@@ -294,7 +294,7 @@ if (is.null(m[[1]]$s.table)) {
   
   output$names <- names(dataSubj)[(dim(covaData)[2] + 1):dim(dataSubj)[2]]
   output <- merge(p.output, output, by="names")
-  write.csv(p.output, paste0(outsubDir, "_coefficients.csv"))
+  write.csv(output, paste0(outsubDir, "_coefficients.csv"))
   
 }
 
