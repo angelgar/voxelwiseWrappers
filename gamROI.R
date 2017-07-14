@@ -52,7 +52,7 @@ for (i in 1:length(opt)){
 
 
 print("##############################################################################")
-print("################  Generalized Additive Model Randomise Script  ###############")
+print("################                 GAM ROI Script                ###############")
 print("################            Angel Garcia de la Garza           ###############")
 print("################              angelgar@upenn.edu               ###############")
 print("################                 Version 3.0.1                 ###############")
@@ -202,7 +202,7 @@ if (residualMap) {
   
   names(resiData)[(length(ids.index) + 1):dim(resiData)[2]] <- names(inputData)[-which(names(inputData) == subjID)]
   
-  write.csv(resiData, paste0(outsubDir, "_residual.csv"))
+  write.csv(resiData, paste0(outsubDir, "_residual.csv"), row.names=F)
 }
 
 
@@ -253,7 +253,7 @@ p.output <- output
 
 if (is.null(m[[1]]$s.table)) {
   
-  write.csv(p.output, paste0(outsubDir, "/coefficients.csv"))
+  write.csv(p.output, paste0(outsubDir, "/coefficients.csv"), row.names=F)
   
 } else {
   
@@ -281,7 +281,7 @@ if (is.null(m[[1]]$s.table)) {
   
   output$names <- names(dataSubj)[(dim(covaData)[2] + 1):dim(dataSubj)[2]]
   output <- merge(p.output, output, by="names")
-  write.csv(output, paste0(outsubDir, "_coefficients.csv"))
+  write.csv(output, paste0(outsubDir, "_coefficients.csv"), row.names=F)
   
 }
 
