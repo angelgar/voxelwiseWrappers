@@ -266,7 +266,7 @@ p.output <- output
 
 if (is.null(m[[1]]$s.table)) {
   
-  write.csv(p.output, paste0(OutDirRoot, "coefficients.csv"), row.names=F)
+  write.csv(p.output, paste0(OutDirRoot, "_coefficients.csv"), row.names=F)
   
 } else {
   
