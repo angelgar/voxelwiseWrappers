@@ -172,7 +172,7 @@ model.formula <- mclapply((dim(covaData)[2] + 1):dim(dataSubj)[2], function(x) {
 
 m <- mclapply(model.formula, function(x) {
   
-  foo <- gam(formula = x, data=covaData, method="REML")
+  foo <- gam(formula = x, data=dataSubj, method="REML")
   summary <- summary(foo)
   residuals <- foo$residuals
   missing <- as.numeric(foo$na.action)
